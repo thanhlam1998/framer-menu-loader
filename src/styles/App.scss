@@ -3,6 +3,7 @@
 
 @import "./components/header";
 @import "./components/banner";
+@import "./components/menu";
 
 * {
   box-sizing: border-box;
@@ -61,6 +62,10 @@ a {
   text-decoration: none;
   color: $black;
   transition: ease-in-out 0.2s;
+}
+
+img {
+  width: 100%;
 }
 
 ul {
