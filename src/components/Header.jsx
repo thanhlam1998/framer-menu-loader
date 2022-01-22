@@ -1,13 +1,19 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ setMenuState }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    setMenuState(false);
+  }, [location]);
+
   return (
     <header>
       <div className="container fluid">
         <div className="header-inner">
           <Link to="/">Pocket.</Link>
-          <div className="hamburger-menu">
+          <div onClick={() => setMenuState((prev) => !prev)} className="hamburger-menu">
             <span />
             <span />
           </div>

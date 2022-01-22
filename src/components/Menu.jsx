@@ -5,39 +5,44 @@ import { Link } from "react-router-dom";
 import { Close } from "../icons/icons";
 import { products } from "../data/products";
 
-const Menu = () => {
+const Menu = ({ menuState, setMenuState }) => {
   return (
-    <div className="products">
-      <div className="menu-title">Products</div>
-      <div className="close">
-        <Close />
-      </div>
-      <div className="menu">
-        <div className="container">
-          <div className="menu-inner">
-            <ul>
-              {products.map((list, index) => (
-                <List
-                  key={index}
-                  title={list.title}
-                  src={list.src}
-                  leftLineFlex={list.leftLineFlex}
-                  rightLineFlex={list.rightLineFlex}
-                  thumbnailPosition={list.thumbnailPosition}
-                />
-              ))}
-            </ul>
+    <>
+      {menuState && (
+        <div className="products">
+          <div className="menu-title">Products</div>
+          <div onClick={() => setMenuState(false)} className="close">
+            <Close />
+          </div>
+          <div className="menu">
+            <div className="container">
+              <div className="menu-inner">
+                <ul>
+                  {products.map((list, index) => (
+                    <List
+                      key={index}
+                      id={list.id}
+                      title={list.title}
+                      src={list.src}
+                      leftLineFlex={list.leftLineFlex}
+                      rightLineFlex={list.rightLineFlex}
+                      thumbnailPosition={list.thumbnailPosition}
+                    />
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
-const List = ({ title, src, leftLineFlex, rightLineFlex, thumbnailPosition }) => {
+const List = ({ id, title, src, leftLineFlex, rightLineFlex, thumbnailPosition }) => {
   return (
     <li>
-      <Link to={`/product/a`}>
+      <Link to={`/product/${id}`}>
         <div className="wrapper">
           <div className={`line left flex-${leftLineFlex}`}>{/* <div className="mask"></div> */}</div>
           <div className="title">
