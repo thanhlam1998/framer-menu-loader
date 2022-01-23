@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,7 +33,7 @@ const maskAnimation = {
   animate: { width: 0 },
 };
 
-const Menu = ({ menuState, setMenuState }) => {
+const Menu = ({ menuState, setMenuState, x, y, setCursorHovered }) => {
   return (
     <AnimatePresence>
       {menuState && (
@@ -44,7 +44,11 @@ const Menu = ({ menuState, setMenuState }) => {
             exit={{ visibility: "hidden", transition: { delay: 1 } }}
             className="products">
             <div className="menu-title">Products</div>
-            <div onClick={() => setMenuState(false)} className="close">
+            <div
+              onClick={() => setMenuState(false)}
+              className="close"
+              onMouseEnter={() => setCursorHovered(true)}
+              onMouseLeave={() => setCursorHovered(false)}>
               <Close />
             </div>
             <div className="menu">
@@ -53,6 +57,8 @@ const Menu = ({ menuState, setMenuState }) => {
                   <motion.ul variants={parent} initial="initial" animate="animate" exit="exit">
                     {products.map((list, index) => (
                       <List
+                        x={x}
+                        y={y}
                         key={index}
                         id={list.id}
                         title={list.title}
@@ -60,6 +66,8 @@ const Menu = ({ menuState, setMenuState }) => {
                         leftLineFlex={list.leftLineFlex}
                         rightLineFlex={list.rightLineFlex}
                         thumbnailPosition={list.thumbnailPosition}
+                        offset={list.offset}
+                        setCursorHovered={setCursorHovered}
                       />
                     ))}
                   </motion.ul>
@@ -74,28 +82,55 @@ const Menu = ({ menuState, setMenuState }) => {
   );
 };
 
-const List = ({ id, title, src, leftLineFlex, rightLineFlex, thumbnailPosition }) => {
+const List = ({ id, title, src, leftLineFlex, rightLineFlex, thumbnailPosition, x, y, offset, setCursorHovered }) => {
+  const [hoverState, setHoverState] = useState(false);
+  const [listPosition, setListPosition] = useState({
+    top: 0,
+    left: 0,
+  });
+  const list = useRef();
+
+  useEffect(() => {
+    setListPosition({
+      top: list?.current?.getBoundingClientRect().top,
+      left: list?.current?.getBoundingClientRect().left,
+    });
+  }, [hoverState]);
+
   return (
-    <li>
+    <li ref={list}>
       <Link to={`/product/${id}`}>
         <div className="wrapper">
           <div className={`line left flex-${leftLineFlex}`}>
             <motion.div variants={maskAnimation} transition={{ ...transition, duration: 1 }} className="mask"></motion.div>
           </div>
-          <div className="title">
+          <motion.div
+            className="title"
+            onHoverStart={() => setHoverState(true)}
+            onHoverEnd={() => setHoverState(false)}
+            onMouseEnter={() => setCursorHovered(true)}
+            onMouseLeave={() => setCursorHovered(false)}>
             <h2>
               <motion.div variants={titleSlideUp} transition={transition} className="text">
                 {title}
               </motion.div>
             </h2>
-          </div>
+          </motion.div>
           <div className="thumbnail" style={{ left: thumbnailPosition }}>
             <img src={src} alt={title} />
             <motion.div variants={maskAnimation} transition={{ ...transition, duration: 1 }} className="mask"></motion.div>
           </div>
-          <div className="floating-image">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: hoverState ? 1 : 0,
+              x: x - listPosition.left + offset,
+              y: y - listPosition.top,
+            }}
+            transition={{ ease: "easeOut" }}
+            className="floating-image">
             <img src={src} alt={title} />
-          </div>
+          </motion.div>
           <div className={`line right flex-${rightLineFlex}`}>
             <motion.div variants={maskAnimation} transition={{ ...transition, duration: 1 }} className="mask right"></motion.div>
           </div>

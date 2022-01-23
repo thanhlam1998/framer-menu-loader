@@ -52,7 +52,13 @@
               display: flex;
               align-items: flex-end;
               .title {
+                z-index: 10;
                 margin: 0 1rem;
+                &:hover {
+                  -webkit-text-fill-color: $white;
+                  -webkit-text-stroke-width: 1px;
+                  -webkit-text-stroke-color: $black;
+                }
                 h2 {
                   overflow: hidden;
                   margin: 0;
@@ -85,11 +91,8 @@
                 pointer-events: none;
                 width: 24rem;
                 position: absolute;
-                // background-size: cover;
-                // background-position: 50%;
                 z-index: 99;
                 overflow: hidden;
-                opacity: 0;
               }
             }
             .line {

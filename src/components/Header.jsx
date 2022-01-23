@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const Header = ({ setMenuState }) => {
+const Header = ({ setMenuState, setCursorHovered }) => {
   const location = useLocation();
 
   useEffect(() => {
@@ -13,7 +13,11 @@ const Header = ({ setMenuState }) => {
       <div className="container fluid">
         <div className="header-inner">
           <Link to="/">Pocket.</Link>
-          <div onClick={() => setMenuState((prev) => !prev)} className="hamburger-menu">
+          <div
+            onClick={() => setMenuState((prev) => !prev)}
+            className="hamburger-menu"
+            onMouseEnter={() => setCursorHovered(true)}
+            onMouseLeave={() => setCursorHovered(false)}>
             <span />
             <span />
           </div>
